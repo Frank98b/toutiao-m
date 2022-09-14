@@ -3,9 +3,20 @@
 */
 import axios from 'axios'
 import store from '@/store/index'
+import JSONBig from 'json-bigint'
+//JSONBig可以处理数据中超出JavaScript安全整数范围的问题，JSONBig.parse()、JSONBig.stringify()
 
 const request = axios.create({
-  baseURL: 'http://toutiao.itheima.net'// 接口基准路径
+  baseURL: 'http://toutiao.itheima.net',// 接口基准路径
+  //自定义后端返回的原始数据
+  transformResponse: [function (data) {
+    // 对接收的 data 进行任意转换处理
+    try {
+      return JSONBig.parse(data)
+    } catch(err) {
+      return data
+    }
+  }],
 })
 
 // 添加请求拦截器
